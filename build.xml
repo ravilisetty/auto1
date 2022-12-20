@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="auto1" basedir="." default="all">
+	<property name="src.dir" value="${basedir}/src" />
+	<property name="lib.dir" value="${basedir}/lib" />
+	<property name="built.dir" value="${basedir}/built" />
+	<property name="built.classes.dir" value="${built.dir}/classes" />
+	<property name="SetRule.jar" value="SetRule.jar" />
+	<property name="drop.location" value="${basedir}/jarFile" />
+	<path id="build.classpath">
+		<pathelement location="${built.classes.dir}" />
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+	<target name="init">
+		<mkdir dir="${built.classes.dir}" />
+	</target>
+	<target name="compile-auto1" depends="init">
+		<javac source="1.8" target="1.8" srcdir="${src.dir}" destdir="${built.classes.dir}" includeAntRuntime="no" debug="on">
+			<classpath refid="build.classpath" />
+		</javac>
+	</target>
+	<target name="package-auto1" depends="compile-auto1">
+		<jar jarfile="${built.dir}/${SetRule.jar}">
+			
+			<fileset dir="${built.classes.dir}" includes="**/*.class" />
+		</jar>
+	</target>
+	<target name="deploy-auto1" depends="package-auto1">
+		<copy todir="${drop.location}" flatten="true">
+			<fileset dir="${built.dir}" includes="${SetRule.jar}" />
+		</copy>
+	</target>
+	<target name="all" depends="init, deploy-auto1" />
+
+	<target name="clean">
+		<delete failonerror="false" includeEmptyDirs="true">
+			<fileset dir="${built.dir}" />
+		</delete>
+	</target>
+</project>
